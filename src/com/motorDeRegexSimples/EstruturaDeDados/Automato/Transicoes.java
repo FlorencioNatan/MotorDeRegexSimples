@@ -25,10 +25,9 @@ public class Transicoes {
 	}
 
 	public Vector<Integer> getEstadosDestidoPorCaractere(char carac) {
-		Caractere caractere = new Caractere(carac);
 		Vector<Integer> estadosDestido = new Vector<>();
 		for (Transicao transicao : listaTransicoes) {
-			if (transicao.getSimbolo().equals(caractere)) {
+			if (transicao.getSimbolo().isEquivalenteAoChar(carac)) {
 				estadosDestido.add(transicao.getEstadoDestino());
 			}
 		}
