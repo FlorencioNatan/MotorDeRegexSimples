@@ -1,52 +1,56 @@
 package com.motorDeRegexSimples.Algoritmos;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
 
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.SimboloFactory;
+
 public class ShuntingYard {
 
-	public String processar(String regexInfix) {
-		String regexPostfix = "";
-		Stack<Character> pilhaOperadores = new Stack<Character>();
-		String regexInfixConcatenacao = adicionarConcatenacaoImplicita(regexInfix);
+	public LinkedList<Simbolo> processar(String regexInfix) {
+		LinkedList<Simbolo> regexPostfix = new LinkedList<Simbolo>();
+		Stack<Simbolo> pilhaOperadores = new Stack<Simbolo>();
+		LinkedList<Simbolo> regexInfixConcatenacao = adicionarConcatenacaoImplicita(regexInfix);
+		SimboloFactory factory = new SimboloFactory();
 
-		for (int i = 0; i < regexInfixConcatenacao.length(); i++) {
-			char tokenAtual = regexInfixConcatenacao.charAt(i);
-
-			if (tokenAtual == ')') {
-				char operador = pilhaOperadores.pop();
-				while (!pilhaOperadores.empty() && operador != '(') {
-					regexPostfix += operador;
+		for (Simbolo tokenAtual : regexInfixConcatenacao) {
+			if (tokenAtual.isEquivalenteAoChar(')')) {
+				Simbolo operador = pilhaOperadores.pop();
+				while (!pilhaOperadores.empty() && !operador.isEquivalenteAoChar('(')) {
+					regexPostfix.add(operador);
 					operador = pilhaOperadores.pop();
 				}
-			} else if (tokenAtual == '(') {
-				pilhaOperadores.add('(');
-			} else if (tokenAtual == '∘') {
-				pilhaOperadores.add('∘');
-			} else if (tokenAtual == '|') {
+			} else if (tokenAtual.isEquivalenteAoChar('(')) {
+				pilhaOperadores.add(factory.getSimbolo('('));
+			} else if (tokenAtual.isEquivalenteAoChar('∘')) {
+				pilhaOperadores.add(factory.getSimbolo('∘'));
+			} else if (tokenAtual.isEquivalenteAoChar('|')) {
 				if (!pilhaOperadores.empty()) {
-					char ultimoOperador = pilhaOperadores.pop();
-					if (ultimoOperador == '∘') {
-						regexPostfix += ultimoOperador;
+					Simbolo ultimoOperador = pilhaOperadores.pop();
+					if (ultimoOperador.isEquivalenteAoChar('∘')) {
+						regexPostfix.add(ultimoOperador);
 					} else {
 						pilhaOperadores.add(ultimoOperador);
 					}
 				}
-				pilhaOperadores.add('|');
+				pilhaOperadores.add(factory.getSimbolo('|'));
 			} else {
-				regexPostfix += tokenAtual;
+				regexPostfix.add(tokenAtual);
 			}
 		}
 
 		while (!pilhaOperadores.empty()) {
-			char operador = pilhaOperadores.pop();
-			regexPostfix += operador;
+			Simbolo operador = pilhaOperadores.pop();
+			regexPostfix.add(operador);
 		}
 		return regexPostfix;
 	}
 
-	private String adicionarConcatenacaoImplicita(String regexInfix) {
+	private LinkedList<Simbolo> adicionarConcatenacaoImplicita(String regexInfix) {
+		SimboloFactory factory = new SimboloFactory();
 		Set<Character> operadoresConcatAntes;
 		operadoresConcatAntes = new HashSet<Character>();
 		operadoresConcatAntes.add('|');
@@ -60,15 +64,15 @@ public class ShuntingYard {
 		operadoresConcatDepois.add('*');
 		operadoresConcatDepois.add(')');
 
-		String regexInfixConcatenacao = "";
+		LinkedList<Simbolo> regexInfixConcatenacao =  new LinkedList<Simbolo>();
 		boolean ultimoTokenLetra = false;
 		for (int i = 0; i < regexInfix.length(); i++) {
 			char tokenAtual = regexInfix.charAt(i);
 
 			if (ultimoTokenLetra && !operadoresConcatDepois.contains(tokenAtual)) {
-				regexInfixConcatenacao += '∘';
+				regexInfixConcatenacao.add(factory.getSimbolo('∘'));
 			}
-			regexInfixConcatenacao += tokenAtual;
+			regexInfixConcatenacao.add(factory.getSimbolo(tokenAtual));
 
 			if (!operadoresConcatAntes.contains(tokenAtual)) {
 				ultimoTokenLetra = true;

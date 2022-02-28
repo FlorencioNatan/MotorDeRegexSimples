@@ -1,9 +1,10 @@
 package com.motorDeRegexSimples.Algoritmos;
 
+import java.util.LinkedList;
 import java.util.Stack;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 
 public class ConstrucaoDeThompson {
@@ -16,27 +17,26 @@ public class ConstrucaoDeThompson {
 
 	public Automato transformar(String regex) {
 		ShuntingYard sy = new ShuntingYard();
-		String regexPostFix = sy.processar(regex);
+		LinkedList<Simbolo> regexPostFix = sy.processar(regex);
 
-		if (regexPostFix.length() == 0) {
+		if (regexPostFix.size() == 0) {
 			return processarStringVazia();
 		}
 
 		Stack<Automato> pilhaDeAutomatos = new Stack<>();
-		for (int i = 0; i < regexPostFix.length(); i++) {
-			char tokenAtual = regexPostFix.charAt(i);
+		for (Simbolo tokenAtual : regexPostFix) {
 			Automato automato;
-			if (tokenAtual == '∘') {
+			if (tokenAtual.isEquivalenteAoChar('∘')) {
 				Automato segundoOperando = pilhaDeAutomatos.pop();
 				Automato primeiroOperando = pilhaDeAutomatos.pop();
 
 				automato = processarConcatenacao(primeiroOperando, segundoOperando);
-			} else if (tokenAtual == '|') {
+			} else if (tokenAtual.isEquivalenteAoChar('|')) {
 				Automato segundoOperando = pilhaDeAutomatos.pop();
 				Automato primeiroOperando = pilhaDeAutomatos.pop();
 
 				automato = processarUniao(primeiroOperando, segundoOperando);
-			} else if (tokenAtual == '*') {
+			} else if (tokenAtual.isEquivalenteAoChar('*')) {
 				Automato operando = pilhaDeAutomatos.pop();
 				automato = processarEstrelaDeKleene(operando);
 			} else {
@@ -56,10 +56,9 @@ public class ConstrucaoDeThompson {
 		return automatoStringVazia;
 	}
 
-	private Automato processarCaractereSimples(char caracter) {
+	private Automato processarCaractereSimples(Simbolo caracter) {
 		Automato automatoCaractereSimples = new Automato(contadorDeEstados);
-		Caractere e = new Caractere(caracter);
-		automatoCaractereSimples.adicionarTransicao(contadorDeEstados, contadorDeEstados + 1, e);
+		automatoCaractereSimples.adicionarTransicao(contadorDeEstados, contadorDeEstados + 1, caracter);
 		automatoCaractereSimples.adicionarEstadosFinais(contadorDeEstados + 1);
 		contadorDeEstados += 2;
 		return automatoCaractereSimples;
