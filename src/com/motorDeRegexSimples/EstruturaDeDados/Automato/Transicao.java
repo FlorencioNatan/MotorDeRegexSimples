@@ -18,4 +18,8 @@ public class Transicao {
 		return this.estadoDestino;
 	}
 
+	public void setEstadoDestino(int estadoDestino) {
+		this.estadoDestino = estadoDestino;
+	}
+
 }

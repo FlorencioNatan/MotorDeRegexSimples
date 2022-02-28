@@ -5,14 +5,16 @@ import java.util.Vector;
 
 public class Automato {
 
-	private HashMap<Integer, Transicoes> tabelaDeTransicoes;
+	private Estado cabeca;
+	private Estado cauda;
 	private int estadoInicial;
 	private Vector<Integer> estadosFinais;
 	private int menorEstado;
 	private int maiorEstado;
 
 	public Automato(int estadoInicial) {
-		this.tabelaDeTransicoes = new HashMap<>();
+		this.cabeca = new Estado(estadoInicial);
+		this.cauda = this.cabeca;
 		this.estadosFinais = new Vector<>();
 		this.estadoInicial = estadoInicial;
 		this.menorEstado = estadoInicial;
@@ -35,8 +37,9 @@ public class Automato {
 		grafo += "-1 [ label = \"\", style = invis ]\n";
 		grafo += "-1 -> " + estadoInicial + ";\n";
 
-		for (Integer estadoOrigem : tabelaDeTransicoes.keySet()) {
-			Transicoes transicoes = tabelaDeTransicoes.get(estadoOrigem);
+		Estado estadoOrigem = this.cabeca;
+		do {
+			Transicoes transicoes = estadoOrigem.getTransicoes();
 			for (Transicao transicao : transicoes.getListaTransicoes()) {
 				Caractere letra = transicao.getCaractere();
 				int estadoDestino = transicao.getEstadoDestino();
@@ -47,10 +50,12 @@ public class Automato {
 					valorLetra = 'ε';
 				}
 				String strTransicao;
-				strTransicao = estadoOrigem + " -> " + estadoDestino + " [label = \"" + valorLetra + "\"];\n";
+				strTransicao = estadoOrigem.getIdEstado() + " -> " + estadoDestino + " [label = \"" + valorLetra + "\"];\n";
 				grafo += strTransicao;
 			}
-		}
+
+			estadoOrigem = estadoOrigem.getProximoEstado();
+		} while(estadoOrigem != null);
 
 		grafo += "}";
 		return grafo;
@@ -60,32 +65,42 @@ public class Automato {
 		atualizarMaiorEMenorEstado(estadoDeOrigem);
 		atualizarMaiorEMenorEstado(estadoDeDestino);
 
-		if (!this.tabelaDeTransicoes.containsKey(estadoDeOrigem)) {
+		if (!this.containsEstado(estadoDeOrigem)) {
 			Transicoes transicoes = new Transicoes();
 			transicoes.addTransicao(caractere, estadoDeDestino);
-			this.tabelaDeTransicoes.put(estadoDeOrigem, transicoes);
+			Estado novoEstado = new Estado(estadoDeOrigem);
+			novoEstado.setTransicoes(transicoes);
+			this.cauda.setProximoEstado(novoEstado);
+			this.cauda = novoEstado;
 			return;
 		}
 
-		this.tabelaDeTransicoes.get(estadoDeOrigem).addTransicao(caractere, estadoDeDestino);
+		this.findEstado(estadoDeOrigem).getTransicoes().addTransicao(caractere, estadoDeDestino);
 	}
 
 	public void adicionarTransicao(int estadoDeOrigem, Transicao transicao) {
 		atualizarMaiorEMenorEstado(estadoDeOrigem);
 		atualizarMaiorEMenorEstado(transicao.getEstadoDestino());
 
-		if (!this.tabelaDeTransicoes.containsKey(estadoDeOrigem)) {
+		if (!this.containsEstado(estadoDeOrigem)) {
 			Transicoes transicoes = new Transicoes();
 			transicoes.addTransicao(transicao);
-			this.tabelaDeTransicoes.put(estadoDeOrigem, transicoes);
+			Estado novoEstado = new Estado(estadoDeOrigem);
+			novoEstado.setTransicoes(transicoes);
+			this.cauda.setProximoEstado(novoEstado);
+			this.cauda = novoEstado;
 			return;
 		}
 
-		this.tabelaDeTransicoes.get(estadoDeOrigem).addTransicao(transicao);
+		this.findEstado(estadoDeOrigem).getTransicoes().addTransicao(transicao);
 	}
 
 	public Transicoes getTransicoesDoEstado(int estado) {
-		return this.tabelaDeTransicoes.get(estado);
+		if (this.findEstado(estado) == null) {
+			return null;
+		}
+
+		return this.findEstado(estado).getTransicoes();
 	}
 
 	private void atualizarMaiorEMenorEstado(int estado) {
@@ -121,34 +136,29 @@ public class Automato {
 	}
 
 	public Automato concatenarCom(Automato segundoOperando) {
-		Automato resultado = new Automato(this.estadoInicial);
-		for (Integer estadoOrigem : this.tabelaDeTransicoes.keySet()) {
-			Transicoes transicoes = this.tabelaDeTransicoes.get(estadoOrigem);
+		Estado estadoOrigem = cabeca;
+		do {
+			Transicoes transicoes = estadoOrigem.getTransicoes();
 			for (Transicao transicao : transicoes.getListaTransicoes()) {
 				int estadoDestino = transicao.getEstadoDestino();
-				Caractere caractere = transicao.getCaractere();
 
-				if (this.estadosFinais.contains(estadoOrigem)) {
-					resultado.adicionarTransicao(segundoOperando.estadoInicial, estadoDestino, caractere);
-				} else if (this.estadosFinais.contains(estadoDestino)) {
-					resultado.adicionarTransicao(estadoOrigem, segundoOperando.estadoInicial, caractere);
-				} else {
-					resultado.adicionarTransicao(estadoOrigem, transicao);
+				if (this.estadosFinais.contains(estadoDestino)) {
+					transicao.setEstadoDestino(segundoOperando.estadoInicial);
 				}
 			}
-		}
-		for (Integer estadoOrigem : segundoOperando.tabelaDeTransicoes.keySet()) {
-			Transicoes transicoes = segundoOperando.tabelaDeTransicoes.get(estadoOrigem);
-			resultado.tabelaDeTransicoes.put(estadoOrigem, transicoes);
-		}
+			estadoOrigem = estadoOrigem.getProximoEstado();
+		} while(estadoOrigem != null);
 
-		resultado.estadosFinais = segundoOperando.estadosFinais;
-		resultado.atualizarMaiorEstado(this.maiorEstado);
-		resultado.atualizarMaiorEstado(segundoOperando.maiorEstado);
-		resultado.atualizarMenorEstado(this.menorEstado);
-		resultado.atualizarMenorEstado(segundoOperando.menorEstado);
+		this.cauda.setProximoEstado(segundoOperando.cabeca);
+		this.cauda = segundoOperando.cauda;
+		this.estadosFinais = segundoOperando.estadosFinais;
 
-		return resultado;
+		this.atualizarMaiorEstado(this.maiorEstado);
+		this.atualizarMaiorEstado(segundoOperando.maiorEstado);
+		this.atualizarMenorEstado(this.menorEstado);
+		this.atualizarMenorEstado(segundoOperando.menorEstado);
+
+		return this;
 	}
 
 	public Automato unirCom(Automato segundoOperando) {
@@ -156,49 +166,71 @@ public class Automato {
 			? this.maiorEstado + 1 : segundoOperando.maiorEstado + 1;
 		int novoEstadoFinal = novoEstadoInicial + 1;
 
-		Automato resultado = new Automato(novoEstadoInicial);
-		for (Integer estadoOrigem : this.tabelaDeTransicoes.keySet()) {
-			Transicoes transicoes = this.tabelaDeTransicoes.get(estadoOrigem);
-			resultado.tabelaDeTransicoes.put(estadoOrigem, transicoes);
-		}
-		for (Integer estadoOrigem : segundoOperando.tabelaDeTransicoes.keySet()) {
-			Transicoes transicoes = segundoOperando.tabelaDeTransicoes.get(estadoOrigem);
-			resultado.tabelaDeTransicoes.put(estadoOrigem, transicoes);
-		}
+		this.cauda.setProximoEstado(segundoOperando.cabeca);
+		this.cauda = segundoOperando.cauda;
 
-		//resultado.maiorEstado + 1
 		Caractere e = new Caractere('ε', true);
-		resultado.adicionarTransicao(novoEstadoInicial, this.estadoInicial, e);
-		resultado.adicionarTransicao(novoEstadoInicial, segundoOperando.estadoInicial, e);
+		this.adicionarTransicao(novoEstadoInicial, this.estadoInicial, e);
+		this.adicionarTransicao(novoEstadoInicial, segundoOperando.estadoInicial, e);
 		for (int estadoFinal: this.estadosFinais) {
-			resultado.adicionarTransicao(estadoFinal, novoEstadoFinal, e);
+			this.adicionarTransicao(estadoFinal, novoEstadoFinal, e);
 		}
 		for (int estadoFinal: segundoOperando.estadosFinais) {
-			resultado.adicionarTransicao(estadoFinal, novoEstadoFinal, e);
+			this.adicionarTransicao(estadoFinal, novoEstadoFinal, e);
 		}
-		resultado.adicionarEstadosFinais(novoEstadoFinal);
-		return resultado;
+
+		this.estadoInicial = novoEstadoInicial;
+		this.estadosFinais = new Vector<Integer>();
+		this.adicionarEstadosFinais(novoEstadoFinal);
+
+		return this;
 	}
 
 	public Automato estrelaDeKleene() {
 		int novoEstadoInicial = this.maiorEstado + 1;
 		int novoEstadoFinal = this.maiorEstado + 2;
-		Automato resultado = new Automato(novoEstadoInicial);
-
-		for (Integer estadoOrigem : this.tabelaDeTransicoes.keySet()) {
-			Transicoes transicoes = this.tabelaDeTransicoes.get(estadoOrigem);
-			resultado.tabelaDeTransicoes.put(estadoOrigem, transicoes);
-		}
 
 		Caractere e = new Caractere('ε', true);
-		resultado.adicionarTransicao(novoEstadoInicial, this.estadoInicial, e);
-		resultado.adicionarTransicao(novoEstadoInicial, novoEstadoFinal, e);
+		this.adicionarTransicao(novoEstadoInicial, this.estadoInicial, e);
+		this.adicionarTransicao(novoEstadoInicial, novoEstadoFinal, e);
 		for (int estadoFinal : this.estadosFinais) {
-			resultado.adicionarTransicao(estadoFinal, this.estadoInicial, e);
-			resultado.adicionarTransicao(estadoFinal, novoEstadoFinal, e);
+			this.adicionarTransicao(estadoFinal, this.estadoInicial, e);
+			this.adicionarTransicao(estadoFinal, novoEstadoFinal, e);
 		}
-		resultado.adicionarEstadosFinais(novoEstadoFinal);
-		return resultado;
+
+		this.estadoInicial = novoEstadoInicial;
+		this.estadosFinais = new Vector<Integer>();
+		this.adicionarEstadosFinais(novoEstadoFinal);
+
+		return this;
+	}
+
+	private boolean containsEstado(int estado) {
+		Estado estadoAtual = this.cabeca;
+		do {
+
+			if (estadoAtual.getIdEstado() == estado) {
+				return true;
+			}
+
+			estadoAtual = estadoAtual.getProximoEstado();
+		} while(estadoAtual != null);
+
+		return false;
+	}
+
+	private Estado findEstado(int estado) {
+		Estado estadoAtual = this.cabeca;
+		do {
+
+			if (estadoAtual.getIdEstado() == estado) {
+				return estadoAtual;
+			}
+
+			estadoAtual = estadoAtual.getProximoEstado();
+		} while(estadoAtual != null);
+
+		return null;
 	}
 
 }
