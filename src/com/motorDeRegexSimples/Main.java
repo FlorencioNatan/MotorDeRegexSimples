@@ -6,14 +6,16 @@ import com.motorDeRegexSimples.Algoritmos.ConstrucaoDeThompson;
 import com.motorDeRegexSimples.Algoritmos.ProcessadorRegexComBacktracking;
 import com.motorDeRegexSimples.Algoritmos.ProcessadorRegexConjuntoDeEstados;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Caractere;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.RenderizadorDeAutomatos;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 
 public class Main {
 
 	public static void main(String[] args) {
 		ConstrucaoDeThompson thompson = new ConstrucaoDeThompson();
-		Automato automato = thompson.transformar("a*a*a*b");// "ab|c" "ab|c*|d"
+		Automato automato = thompson.transformar("a*a*a*b");// "a*a*a*b" "ab|c" "ab|c*|d"
+
 		ProcessadorRegexConjuntoDeEstados processado = new ProcessadorRegexConjuntoDeEstados(automato);
 //		ProcessadorRegexComBacktracking processado = new ProcessadorRegexComBacktracking(automato);
 		Vector<String> matches = processado.processar("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -25,10 +27,10 @@ public class Main {
 
 	private static Automato exemplo1() {
 		Automato automato = new Automato(0);
-		Caractere a = new Caractere('a', false);
-		Caractere b = new Caractere('b', false);
-		Caractere e = new Caractere('z', true);
-		Caractere e2 = new Caractere('e', true);
+		Caractere a = new Caractere('a');
+		Caractere b = new Caractere('b');
+		ExpressaoVazia e = new ExpressaoVazia();
+		ExpressaoVazia e2 = new ExpressaoVazia();
 
 		automato.adicionarTransicao(0, 1, e);
 		automato.adicionarTransicao(0, 3, e2);
@@ -49,8 +51,8 @@ public class Main {
 
 	private static Automato exemplo2() {
 		Automato automato = new Automato(0);
-		Caractere a = new Caractere('a', false);
-		Caractere b = new Caractere('b', false);
+		Caractere a = new Caractere('a');
+		Caractere b = new Caractere('b');
 
 		automato.adicionarTransicao(0, 1, a);
 		automato.adicionarTransicao(0, 0, b);

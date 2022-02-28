@@ -3,6 +3,9 @@ package com.motorDeRegexSimples.EstruturaDeDados.Automato;
 import java.util.LinkedList;
 import java.util.Vector;
 
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
+
 public class Transicoes {
 
 	private LinkedList<Transicao> listaTransicoes;
@@ -14,7 +17,7 @@ public class Transicoes {
 	public Vector<Integer> getEstadosDestidoPorCaractere(Caractere caractere) {
 		Vector<Integer> estadosDestido = new Vector<>();
 		for (Transicao transicao : listaTransicoes) {
-			if (transicao.getCaractere().equals(caractere)) {
+			if (transicao.getSimbolo().equals(caractere)) {
 				estadosDestido.add(transicao.getEstadoDestino());
 			}
 		}
@@ -22,18 +25,18 @@ public class Transicoes {
 	}
 
 	public Vector<Integer> getEstadosDestidoPorCaractere(char carac) {
-		Caractere caractere = new Caractere(carac, false);
+		Caractere caractere = new Caractere(carac);
 		Vector<Integer> estadosDestido = new Vector<>();
 		for (Transicao transicao : listaTransicoes) {
-			if (transicao.getCaractere().equals(caractere)) {
+			if (transicao.getSimbolo().equals(caractere)) {
 				estadosDestido.add(transicao.getEstadoDestino());
 			}
 		}
 		return estadosDestido;
 	}
 
-	public void addTransicao(Caractere caracatere, int estadoDestino) {
-		Transicao transicao = new Transicao(caracatere, estadoDestino);
+	public void addTransicao(Simbolo simbolo, int estadoDestino) {
+		Transicao transicao = new Transicao(simbolo, estadoDestino);
 		listaTransicoes.add(transicao);
 	}
 

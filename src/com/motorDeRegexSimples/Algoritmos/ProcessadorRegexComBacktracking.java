@@ -4,9 +4,11 @@ import java.util.Stack;
 import java.util.Vector;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Caractere;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Transicao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Transicoes;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 
 public class ProcessadorRegexComBacktracking {
 
@@ -43,12 +45,12 @@ public class ProcessadorRegexComBacktracking {
 		estadosParaVisitar.add(estadoInicial);
 		while (!estadosParaVisitar.empty()) {
 			EstadoBusca estadoAtual = estadosParaVisitar.pop();
-			Caractere charactereAtual;
+			Simbolo charactereAtual;
 			if (estadoAtual.posicao < texto.length()) {
 				char charAtual = texto.charAt(estadoAtual.posicao);
-				charactereAtual = new Caractere(charAtual, false);
+				charactereAtual = new Caractere(charAtual);
 			} else {
-				charactereAtual = new Caractere('ε', true);
+				charactereAtual = new ExpressaoVazia();
 			}
 
 			Transicoes transicoes = automato.getTransicoesDoEstado(estadoAtual.estado);
@@ -57,18 +59,18 @@ public class ProcessadorRegexComBacktracking {
 			}
 
 			for (Transicao transicao : transicoes.getListaTransicoes()) {
-				if (!transicao.getCaractere().equals(charactereAtual)) {
+				if (!transicao.getSimbolo().equals(charactereAtual)) {
 					continue;
 				}
 
 				int posicao = estadoAtual.posicao;
-				posicao = transicao.getCaractere().isTransacaoVazia() ? posicao: posicao + 1;
+				posicao = transicao.getSimbolo() instanceof ExpressaoVazia ? posicao: posicao + 1;
 
 				if (automato.isEstadoFinal(transicao.getEstadoDestino()) && posicao > posicaoFinal) {
 					posicaoFinal = posicao;
 				}
 
-				if (charactereAtual.isTransacaoVazia()) {
+				if (charactereAtual instanceof ExpressaoVazia) {
 					continue;
 				}
 

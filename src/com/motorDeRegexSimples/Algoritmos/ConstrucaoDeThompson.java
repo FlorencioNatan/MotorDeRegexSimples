@@ -3,7 +3,8 @@ package com.motorDeRegexSimples.Algoritmos;
 import java.util.Stack;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Caractere;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 
 public class ConstrucaoDeThompson {
 
@@ -49,7 +50,7 @@ public class ConstrucaoDeThompson {
 
 	private Automato processarStringVazia() {
 		Automato automatoStringVazia = new Automato(0);
-		Caractere e = new Caractere('ε', true);
+		ExpressaoVazia e = new ExpressaoVazia();
 		automatoStringVazia.adicionarTransicao(0, 1, e);
 		automatoStringVazia.adicionarEstadosFinais(1);
 		return automatoStringVazia;
@@ -57,7 +58,7 @@ public class ConstrucaoDeThompson {
 
 	private Automato processarCaractereSimples(char caracter) {
 		Automato automatoCaractereSimples = new Automato(contadorDeEstados);
-		Caractere e = new Caractere(caracter, false);
+		Caractere e = new Caractere(caracter);
 		automatoCaractereSimples.adicionarTransicao(contadorDeEstados, contadorDeEstados + 1, e);
 		automatoCaractereSimples.adicionarEstadosFinais(contadorDeEstados + 1);
 		contadorDeEstados += 2;

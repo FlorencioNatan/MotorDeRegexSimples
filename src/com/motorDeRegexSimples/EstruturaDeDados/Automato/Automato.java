@@ -3,6 +3,10 @@ package com.motorDeRegexSimples.EstruturaDeDados.Automato;
 import java.util.HashMap;
 import java.util.Vector;
 
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
+
 public class Automato {
 
 	private Estado cabeca;
@@ -41,10 +45,10 @@ public class Automato {
 		do {
 			Transicoes transicoes = estadoOrigem.getTransicoes();
 			for (Transicao transicao : transicoes.getListaTransicoes()) {
-				Caractere letra = transicao.getCaractere();
+				Simbolo letra = transicao.getSimbolo();
 				int estadoDestino = transicao.getEstadoDestino();
 				char valorLetra = ' ';
-				if (!letra.isTransacaoVazia()) {
+				if (!(letra instanceof ExpressaoVazia)) {
 					valorLetra = letra.getValor();
 				} else {
 					valorLetra = 'ε';
@@ -61,7 +65,7 @@ public class Automato {
 		return grafo;
 	}
 
-	public void adicionarTransicao(int estadoDeOrigem, int estadoDeDestino, Caractere caractere) {
+	public void adicionarTransicao(int estadoDeOrigem, int estadoDeDestino, Simbolo caractere) {
 		atualizarMaiorEMenorEstado(estadoDeOrigem);
 		atualizarMaiorEMenorEstado(estadoDeDestino);
 
@@ -169,7 +173,7 @@ public class Automato {
 		this.cauda.setProximoEstado(segundoOperando.cabeca);
 		this.cauda = segundoOperando.cauda;
 
-		Caractere e = new Caractere('ε', true);
+		Simbolo e = new ExpressaoVazia();
 		this.adicionarTransicao(novoEstadoInicial, this.estadoInicial, e);
 		this.adicionarTransicao(novoEstadoInicial, segundoOperando.estadoInicial, e);
 		for (int estadoFinal: this.estadosFinais) {
@@ -190,7 +194,7 @@ public class Automato {
 		int novoEstadoInicial = this.maiorEstado + 1;
 		int novoEstadoFinal = this.maiorEstado + 2;
 
-		Caractere e = new Caractere('ε', true);
+		Simbolo e = new ExpressaoVazia();
 		this.adicionarTransicao(novoEstadoInicial, this.estadoInicial, e);
 		this.adicionarTransicao(novoEstadoInicial, novoEstadoFinal, e);
 		for (int estadoFinal : this.estadosFinais) {

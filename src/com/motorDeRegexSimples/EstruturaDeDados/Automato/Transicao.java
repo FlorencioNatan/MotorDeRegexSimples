@@ -1,17 +1,19 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato;
 
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
+
 public class Transicao {
 
-	private Caractere caractere;
+	private Simbolo simbolo;
 	private int estadoDestino;
 
-	public Transicao(Caractere caractere, int estadoDestino) {
-		this.caractere = caractere;
+	public Transicao(Simbolo simbolo, int estadoDestino) {
+		this.simbolo = simbolo;
 		this.estadoDestino = estadoDestino;
 	}
 
-	public Caractere getCaractere() {
-		return this.caractere;
+	public Simbolo getSimbolo() {
+		return this.simbolo;
 	}
 
 	public int getEstadoDestino() {

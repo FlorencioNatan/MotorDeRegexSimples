@@ -5,9 +5,11 @@ import java.util.Stack;
 import java.util.Vector;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Caractere;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Transicao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Transicoes;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 
 public class ProcessadorRegexConjuntoDeEstados {
 
@@ -40,7 +42,7 @@ public class ProcessadorRegexConjuntoDeEstados {
 		Stack<EstadoBusca> estadosParaVisitar = new Stack<>();
 		int posicaoFinal = posicaoAtual;
 
-		Caractere e = new Caractere('ε', true);
+		ExpressaoVazia e = new ExpressaoVazia();
 		HashSet<Integer> estadosIniciais = getConjuntoEstados(
 			automato.getEstadoInicial(),
 			e
@@ -50,12 +52,12 @@ public class ProcessadorRegexConjuntoDeEstados {
 		estadosParaVisitar.add(estadoInicial);
 		while (!estadosParaVisitar.empty()) {
 			EstadoBusca estadoAtual = estadosParaVisitar.pop();
-			Caractere charactereAtual;
+			Simbolo charactereAtual;
 			if (estadoAtual.posicao < texto.length()) {
 				char charAtual = texto.charAt(estadoAtual.posicao);
-				charactereAtual = new Caractere(charAtual, false);
+				charactereAtual = new Caractere(charAtual);
 			} else {
-				charactereAtual = new Caractere('ε', true);
+				charactereAtual = new ExpressaoVazia();
 				continue;
 			}
 
@@ -71,12 +73,12 @@ public class ProcessadorRegexConjuntoDeEstados {
 				}
 
 				for (Transicao transicao : transicoes.getListaTransicoes()) {
-					if (!transicao.getCaractere().equals(charactereAtual)) {
+					if (!transicao.getSimbolo().equals(charactereAtual)) {
 						continue;
 					}
 
 					int posicao = estadoAtual.posicao;
-					if (!transicao.getCaractere().isTransacaoVazia()) {
+					if (!(transicao.getSimbolo() instanceof ExpressaoVazia)) {
 						posicao++;
 					}
 
@@ -84,7 +86,7 @@ public class ProcessadorRegexConjuntoDeEstados {
 						posicaoFinal = posicao < texto.length() ? posicao : texto.length();
 					}
 
-					if (charactereAtual.isTransacaoVazia()) {
+					if (charactereAtual instanceof ExpressaoVazia) {
 						continue;
 					}
 
@@ -100,7 +102,7 @@ public class ProcessadorRegexConjuntoDeEstados {
 		return texto.substring(posicaoAtual, posicaoFinal);
 	}
 
-	private HashSet<Integer> getConjuntoEstados(int estado, Caractere caractere) {
+	private HashSet<Integer> getConjuntoEstados(int estado, Simbolo simbolo) {
 		HashSet<Integer> proximosEstados = new HashSet<>();
 
 		Transicoes transicoes = automato.getTransicoesDoEstado(estado);
@@ -109,7 +111,7 @@ public class ProcessadorRegexConjuntoDeEstados {
 		}
 
 		for (Transicao transicao : transicoes.getListaTransicoes()) {
-			if (transicao.getCaractere().isTransacaoVazia()) {
+			if (transicao.getSimbolo() instanceof ExpressaoVazia) {
 				Stack<Integer> possiveisEstados = new Stack<>();
 				possiveisEstados.add(transicao.getEstadoDestino());
 				while (!possiveisEstados.empty()) {
@@ -124,18 +126,18 @@ public class ProcessadorRegexConjuntoDeEstados {
 						continue;
 					}
 					for (Transicao possivelTransicao : possiveisTransicoes.getListaTransicoes()) {
-						if (possivelTransicao.getCaractere().isTransacaoVazia()) {
+						if (possivelTransicao.getSimbolo() instanceof ExpressaoVazia) {
 							possiveisEstados.add(possivelTransicao.getEstadoDestino());
-						} else if (!caractere.isTransacaoVazia() && possivelTransicao.getCaractere().equals(caractere)) {
+						} else if (!(simbolo instanceof ExpressaoVazia) && possivelTransicao.getSimbolo().equals(simbolo)) {
 							proximosEstados.add(possivelTransicao.getEstadoDestino());
 						} else {
 							proximosEstados.add(possivelEstadoDestino);
 						}
 					}
 				}
-			} else if (!caractere.isTransacaoVazia() && caractere.equals(transicao.getCaractere())) {
+			} else if (!(simbolo instanceof ExpressaoVazia) && simbolo.equals(transicao.getSimbolo())) {
 				proximosEstados.add(transicao.getEstadoDestino());
-			} else if (!caractere.isTransacaoVazia() && !caractere.equals(transicao.getCaractere())) {
+			} else if (!(simbolo instanceof ExpressaoVazia) && !simbolo.equals(transicao.getSimbolo())) {
 				proximosEstados.add(estado);
 			}
 		}
@@ -145,13 +147,13 @@ public class ProcessadorRegexConjuntoDeEstados {
 
 	private HashSet<Integer> getConjuntoEstados(Transicao transicao) {
 		int estado = transicao.getEstadoDestino();
-		Caractere caractere = transicao.getCaractere();
+		Simbolo caractere = transicao.getSimbolo();
 
 		return getConjuntoEstados(estado, caractere);
 	}
 
 	private boolean isConjuntoEstadosFinal(int estado) {
-		Caractere caractere = new Caractere('ε', true);
+		Simbolo caractere = new ExpressaoVazia();
 		HashSet<Integer> conjuntoEstados = getConjuntoEstados(estado, caractere);
 		conjuntoEstados.add(estado);
 		for (int possivelEstadoFinal : conjuntoEstados) {
