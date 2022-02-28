@@ -9,6 +9,7 @@ import com.motorDeRegexSimples.EstruturaDeDados.Automato.Transicao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Transicoes;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.SimboloFactory;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 
 public class ProcessadorRegexConjuntoDeEstados {
@@ -90,7 +91,7 @@ public class ProcessadorRegexConjuntoDeEstados {
 						continue;
 					}
 
-					proximoConjuntoDeEstados.addAll(getConjuntoEstados(transicao));
+					proximoConjuntoDeEstados.addAll(getConjuntoEstados(estado, transicao.getSimbolo()));
 				}
 			}
 			if (!proximoConjuntoDeEstados.isEmpty()) {
@@ -136,8 +137,16 @@ public class ProcessadorRegexConjuntoDeEstados {
 					}
 				}
 			} else if (!(simbolo instanceof ExpressaoVazia) && simbolo.equals(transicao.getSimbolo())) {
+				int estadoDestino = transicao.getEstadoDestino();
+				SimboloFactory factory = new SimboloFactory();
+				HashSet<Integer> estadosParaAdicionar = this.getConjuntoEstados(estadoDestino, factory.getSimbolo());
 				proximosEstados.add(transicao.getEstadoDestino());
+				for (Integer i: estadosParaAdicionar) {
+					proximosEstados.add(i);
+				}
 			} else if (!(simbolo instanceof ExpressaoVazia) && !simbolo.equals(transicao.getSimbolo())) {
+				proximosEstados.add(estado);
+			} else {
 				proximosEstados.add(estado);
 			}
 		}
