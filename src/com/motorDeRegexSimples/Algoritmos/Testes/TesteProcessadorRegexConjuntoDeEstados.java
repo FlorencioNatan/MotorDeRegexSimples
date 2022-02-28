@@ -4,11 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Vector;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import com.motorDeRegexSimples.Algoritmos.ConstrucaoDeThompson;
-import com.motorDeRegexSimples.Algoritmos.ProcessadorRegexComBacktracking;
 import com.motorDeRegexSimples.Algoritmos.ProcessadorRegexConjuntoDeEstados;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
 

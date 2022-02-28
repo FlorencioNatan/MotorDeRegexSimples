@@ -1,9 +1,7 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato;
 
-import java.util.HashMap;
 import java.util.Vector;
 
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 
