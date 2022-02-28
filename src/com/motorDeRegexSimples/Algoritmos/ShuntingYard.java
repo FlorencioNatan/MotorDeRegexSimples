@@ -76,6 +76,10 @@ public class ShuntingYard {
 			if (ultimoTokenLetra && !operadoresConcatDepois.contains(tokenAtual)) {
 				regexInfixConcatenacao.add(factory.getSimbolo('∘'));
 			}
+			if (tokenAtual == '\\') {
+				factory.setEscape();
+				tokenAtual = regexInfix.charAt(++i);
+			}
 			regexInfixConcatenacao.add(factory.getSimbolo(tokenAtual));
 
 			if (!operadoresConcatAntes.contains(tokenAtual)) {
