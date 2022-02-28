@@ -68,6 +68,19 @@ class TesteProcessadorRegexConjuntoDeEstados {
 	}
 
 	@Test
+	void testDigitos() {
+		ConstrucaoDeThompson thompson = new ConstrucaoDeThompson();
+		Automato automato = thompson.transformar("\\d\\d\\d.\\d\\d\\d.\\d\\d\\d-\\d\\d");
+		ProcessadorRegexConjuntoDeEstados processado = new ProcessadorRegexConjuntoDeEstados(automato);
+		Vector<String> matches = processado.processar("Meu CPF é: 012.345.678-90.");
+
+		Vector<String> expected = new Vector<>();
+		expected.add("012.345.678-90");
+
+		assertEquals(expected, matches);
+	}
+
+	@Test
 	void testDesempenho1() {
 		ConstrucaoDeThompson thompson = new ConstrucaoDeThompson();
 		Automato automato = thompson.transformar("a*a*a*b");
