@@ -14,6 +14,10 @@ public class Caractere implements Simbolo {
 		return this.valor;
 	}
 
+	public boolean isEquivalenteAoChar(char valor) {
+		return this.valor == valor;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Caractere) {

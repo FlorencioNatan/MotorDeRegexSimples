@@ -7,4 +7,6 @@ public interface Simbolo {
 	@Override
 	public boolean equals(Object obj);
 
+	public boolean isEquivalenteAoChar(char valor);
+
 }

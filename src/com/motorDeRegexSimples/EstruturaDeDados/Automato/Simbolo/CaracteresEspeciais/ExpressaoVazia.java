@@ -15,4 +15,8 @@ public class ExpressaoVazia implements Simbolo {
 		return true;
 	}
 
+	public boolean isEquivalenteAoChar(char valor) {
+		return true;
+	}
+
 }
