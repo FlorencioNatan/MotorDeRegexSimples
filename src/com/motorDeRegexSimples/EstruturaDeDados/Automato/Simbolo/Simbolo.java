@@ -2,7 +2,7 @@ package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo;
 
 public interface Simbolo {
 
-	public char getValor();
+	public String getValor();
 
 	@Override
 	public boolean equals(Object obj);

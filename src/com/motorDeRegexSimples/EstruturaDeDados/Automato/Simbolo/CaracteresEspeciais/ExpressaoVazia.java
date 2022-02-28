@@ -6,8 +6,8 @@ public class ExpressaoVazia implements Simbolo {
 
 	private char valor = 'ε';
 
-	public char getValor() {
-		return this.valor;
+	public String getValor() {
+		return Character.toString(this.valor);
 	}
 
 	@Override

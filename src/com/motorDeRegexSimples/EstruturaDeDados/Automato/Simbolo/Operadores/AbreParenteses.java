@@ -5,8 +5,8 @@ import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 public class AbreParenteses implements Simbolo {
 
 	@Override
-	public char getValor() {
-		return '(';
+	public String getValor() {
+		return "(";
 	}
 
 	@Override

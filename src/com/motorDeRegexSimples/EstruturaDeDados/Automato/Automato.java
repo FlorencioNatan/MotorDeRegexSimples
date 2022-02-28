@@ -45,11 +45,11 @@ public class Automato {
 			for (Transicao transicao : transicoes.getListaTransicoes()) {
 				Simbolo letra = transicao.getSimbolo();
 				int estadoDestino = transicao.getEstadoDestino();
-				char valorLetra = ' ';
+				String valorLetra = " ";
 				if (!(letra instanceof ExpressaoVazia)) {
 					valorLetra = letra.getValor();
 				} else {
-					valorLetra = 'ε';
+					valorLetra = "ε";
 				}
 				String strTransicao;
 				strTransicao = estadoOrigem.getIdEstado() + " -> " + estadoDestino + " [label = \"" + valorLetra + "\"];\n";

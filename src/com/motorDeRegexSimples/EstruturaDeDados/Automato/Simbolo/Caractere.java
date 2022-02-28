@@ -10,8 +10,8 @@ public class Caractere implements Simbolo {
 		this.valor = valor;
 	}
 
-	public char getValor() {
-		return this.valor;
+	public String getValor() {
+		return Character.toString(this.valor);
 	}
 
 	public boolean isEquivalenteAoChar(char valor) {
