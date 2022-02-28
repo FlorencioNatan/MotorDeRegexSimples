@@ -6,6 +6,9 @@ import java.util.Stack;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.EstrelaDeKleene;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
 public class ConstrucaoDeThompson {
 
@@ -26,17 +29,17 @@ public class ConstrucaoDeThompson {
 		Stack<Automato> pilhaDeAutomatos = new Stack<>();
 		for (Simbolo tokenAtual : regexPostFix) {
 			Automato automato;
-			if (tokenAtual.isEquivalenteAoChar('∘')) {
+			if (tokenAtual instanceof Concatenacao) {
 				Automato segundoOperando = pilhaDeAutomatos.pop();
 				Automato primeiroOperando = pilhaDeAutomatos.pop();
 
 				automato = processarConcatenacao(primeiroOperando, segundoOperando);
-			} else if (tokenAtual.isEquivalenteAoChar('|')) {
+			} else if (tokenAtual instanceof Uniao) {
 				Automato segundoOperando = pilhaDeAutomatos.pop();
 				Automato primeiroOperando = pilhaDeAutomatos.pop();
 
 				automato = processarUniao(primeiroOperando, segundoOperando);
-			} else if (tokenAtual.isEquivalenteAoChar('*')) {
+			} else if (tokenAtual  instanceof EstrelaDeKleene) {
 				Automato operando = pilhaDeAutomatos.pop();
 				automato = processarEstrelaDeKleene(operando);
 			} else {

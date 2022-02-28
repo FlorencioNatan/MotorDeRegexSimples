@@ -7,6 +7,10 @@ import java.util.Stack;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.SimboloFactory;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.AbreParenteses;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.FechaParenteses;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
 public class ShuntingYard {
 
@@ -17,20 +21,20 @@ public class ShuntingYard {
 		SimboloFactory factory = new SimboloFactory();
 
 		for (Simbolo tokenAtual : regexInfixConcatenacao) {
-			if (tokenAtual.isEquivalenteAoChar(')')) {
+			if (tokenAtual instanceof FechaParenteses) {
 				Simbolo operador = pilhaOperadores.pop();
-				while (!pilhaOperadores.empty() && !operador.isEquivalenteAoChar('(')) {
+				while (!pilhaOperadores.empty() && !(operador instanceof AbreParenteses)) {
 					regexPostfix.add(operador);
 					operador = pilhaOperadores.pop();
 				}
-			} else if (tokenAtual.isEquivalenteAoChar('(')) {
+			} else if (tokenAtual instanceof AbreParenteses) {
 				pilhaOperadores.add(factory.getSimbolo('('));
-			} else if (tokenAtual.isEquivalenteAoChar('∘')) {
+			} else if (tokenAtual instanceof Concatenacao) {
 				pilhaOperadores.add(factory.getSimbolo('∘'));
-			} else if (tokenAtual.isEquivalenteAoChar('|')) {
+			} else if (tokenAtual instanceof Uniao) {
 				if (!pilhaOperadores.empty()) {
 					Simbolo ultimoOperador = pilhaOperadores.pop();
-					if (ultimoOperador.isEquivalenteAoChar('∘')) {
+					if (ultimoOperador instanceof Concatenacao) {
 						regexPostfix.add(ultimoOperador);
 					} else {
 						pilhaOperadores.add(ultimoOperador);
