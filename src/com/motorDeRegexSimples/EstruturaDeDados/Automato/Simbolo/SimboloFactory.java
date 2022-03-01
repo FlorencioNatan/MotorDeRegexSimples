@@ -57,6 +57,28 @@ public class SimboloFactory {
 			return new Espaco();
 		}
 
+		// Complementos dos simbolos definidos anteriormente
+
+		if (simbolo == 'D') {
+			return new ComplementoDoSimbolo(new Digitos());
+		}
+
+		if (simbolo == 'W') {
+			return new ComplementoDoSimbolo(new Palavra());
+		}
+
+		if (simbolo == 'H') {
+			return new ComplementoDoSimbolo(new EspacoHorizontal());
+		}
+
+		if (simbolo == 'V') {
+			return new ComplementoDoSimbolo(new EspacoVertical());
+		}
+
+		if (simbolo == 'S') {
+			return new ComplementoDoSimbolo(new Espaco());
+		}
+
 		return new Caractere(simbolo);
 	}
 

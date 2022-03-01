@@ -4,7 +4,6 @@ public interface Simbolo {
 
 	public String getValor();
 
-	@Override
 	public boolean equals(Object obj);
 
 	public boolean isEquivalenteAoChar(char valor);
