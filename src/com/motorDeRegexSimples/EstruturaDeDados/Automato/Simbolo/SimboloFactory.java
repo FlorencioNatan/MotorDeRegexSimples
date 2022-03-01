@@ -1,5 +1,6 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo;
 
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.Contrabarra;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.Digitos;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.Espaco;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.EspacoHorizontal;
@@ -37,6 +38,10 @@ public class SimboloFactory {
 
 	private Simbolo getSimboloEscapado(char simbolo) {
 		this.escape = false;
+
+		if (simbolo == '\\') {
+			return new Contrabarra();
+		}
 
 		if (simbolo == 'd') {
 			return new Digitos();
