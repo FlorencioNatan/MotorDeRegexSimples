@@ -140,9 +140,9 @@ public class ProcessadorRegexConjuntoDeEstados {
 				int estadoDestino = transicao.getEstadoDestino();
 				SimboloFactory factory = new SimboloFactory();
 				HashSet<Integer> estadosParaAdicionar = this.getConjuntoEstados(estadoDestino, factory.getSimbolo());
-				proximosEstados.add(transicao.getEstadoDestino());
+				adicionaEstadoAoConjutoDeEstados(estadoDestino, proximosEstados);
 				for (Integer i: estadosParaAdicionar) {
-					proximosEstados.add(i);
+					adicionaEstadoAoConjutoDeEstados(i, proximosEstados);
 				}
 			} else if (!(simbolo instanceof ExpressaoVazia) && !simbolo.equals(transicao.getSimbolo())) {
 				proximosEstados.add(estado);
@@ -154,11 +154,23 @@ public class ProcessadorRegexConjuntoDeEstados {
 		return proximosEstados;
 	}
 
-	private HashSet<Integer> getConjuntoEstados(Transicao transicao) {
-		int estado = transicao.getEstadoDestino();
-		Simbolo caractere = transicao.getSimbolo();
+	private void adicionaEstadoAoConjutoDeEstados(int estado, HashSet<Integer> conjuntoEstados) {
+		boolean possuiApenasTransicoesVazias = true;
+		Transicoes transicoes = automato.getTransicoesDoEstado(estado);
+		if (transicoes == null) {
+			conjuntoEstados.add(estado);
+			return;
+		}
 
-		return getConjuntoEstados(estado, caractere);
+		for (Transicao transicao : transicoes.getListaTransicoes()) {
+			if (!(transicao.getSimbolo() instanceof ExpressaoVazia)) {
+				possuiApenasTransicoesVazias = false;
+			}
+		}
+
+		if (!possuiApenasTransicoesVazias) {
+			conjuntoEstados.add(estado);
+		}
 	}
 
 	private boolean isConjuntoEstadosFinal(int estado) {
