@@ -7,6 +7,7 @@ import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Abre
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.EstrelaDeKleene;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.FechaParenteses;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Opcao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
 public class SimboloFactory {
@@ -45,19 +46,23 @@ public class SimboloFactory {
 		}
 
 		if (simbolo == '|') {
-			return new  Uniao();
+			return new Uniao();
 		}
 
 		if (simbolo == '*') {
-			return new  EstrelaDeKleene();
+			return new EstrelaDeKleene();
+		}
+
+		if (simbolo == '?') {
+			return new Opcao();
 		}
 
 		if (simbolo == '(') {
-			return new  AbreParenteses();
+			return new AbreParenteses();
 		}
 
 		if (simbolo == ')') {
-			return new  FechaParenteses();
+			return new FechaParenteses();
 		}
 
 		if (simbolo == '.') {

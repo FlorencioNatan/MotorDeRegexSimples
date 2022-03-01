@@ -10,6 +10,7 @@ import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.SimboloFactory;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.AbreParenteses;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.FechaParenteses;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Opcao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
 public class ShuntingYard {
@@ -67,6 +68,7 @@ public class ShuntingYard {
 		operadoresConcatDepois.add('∘');
 		operadoresConcatDepois.add('*');
 		operadoresConcatDepois.add(')');
+		operadoresConcatDepois.add('?');
 
 		LinkedList<Simbolo> regexInfixConcatenacao =  new LinkedList<Simbolo>();
 		boolean ultimoTokenLetra = false;
@@ -89,6 +91,12 @@ public class ShuntingYard {
 			}
 		}
 		return regexInfixConcatenacao;
+	}
+
+	private void imprimirListaSimbolos(LinkedList<Simbolo> lista) {
+		for (Simbolo simbolo : lista) {
+			System.out.println("Lista: " + simbolo.getValor());
+		}
 	}
 
 }

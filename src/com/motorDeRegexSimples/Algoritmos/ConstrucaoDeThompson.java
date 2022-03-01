@@ -5,9 +5,11 @@ import java.util.Stack;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.SimboloFactory;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.EstrelaDeKleene;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Opcao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
 public class ConstrucaoDeThompson {
@@ -42,6 +44,9 @@ public class ConstrucaoDeThompson {
 			} else if (tokenAtual  instanceof EstrelaDeKleene) {
 				Automato operando = pilhaDeAutomatos.pop();
 				automato = processarEstrelaDeKleene(operando);
+			} else if (tokenAtual  instanceof Opcao) {
+				Automato operando = pilhaDeAutomatos.pop();
+				automato = processarOpcao(operando);
 			} else {
 				automato = processarCaractereSimples(tokenAtual);
 			}
@@ -79,6 +84,15 @@ public class ConstrucaoDeThompson {
 
 	private Automato processarEstrelaDeKleene(Automato operando) {
 		Automato resultado = operando.estrelaDeKleene();
+		contadorDeEstados = resultado.getMaiorEstado() + 1;
+		return resultado;
+	}
+
+	private Automato processarOpcao(Automato operando) {
+		SimboloFactory factory = new SimboloFactory();
+		Automato expressaoVazia = processarCaractereSimples(factory.getSimbolo());
+
+		Automato resultado = operando.unirCom(expressaoVazia);
 		contadorDeEstados = resultado.getMaiorEstado() + 1;
 		return resultado;
 	}
