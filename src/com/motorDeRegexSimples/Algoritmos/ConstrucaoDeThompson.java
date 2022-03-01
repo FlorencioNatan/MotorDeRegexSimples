@@ -9,6 +9,7 @@ import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.SimboloFactory;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.EstrelaDeKleene;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.MaisDeKleene;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Opcao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
@@ -47,6 +48,9 @@ public class ConstrucaoDeThompson {
 			} else if (tokenAtual  instanceof Opcao) {
 				Automato operando = pilhaDeAutomatos.pop();
 				automato = processarOpcao(operando);
+			} else if (tokenAtual  instanceof MaisDeKleene) {
+				Automato operando = pilhaDeAutomatos.pop();
+				automato = processarMaisDeKleene(operando);
 			} else {
 				automato = processarCaractereSimples(tokenAtual);
 			}
@@ -84,6 +88,15 @@ public class ConstrucaoDeThompson {
 
 	private Automato processarEstrelaDeKleene(Automato operando) {
 		Automato resultado = operando.estrelaDeKleene();
+		contadorDeEstados = resultado.getMaiorEstado() + 1;
+		return resultado;
+	}
+
+	private Automato processarMaisDeKleene(Automato primeiroOperando) {
+		Automato segundoOperando = primeiroOperando.duplicar(contadorDeEstados);
+		segundoOperando.estrelaDeKleene();
+
+		Automato resultado = primeiroOperando.concatenarCom(segundoOperando);
 		contadorDeEstados = resultado.getMaiorEstado() + 1;
 		return resultado;
 	}

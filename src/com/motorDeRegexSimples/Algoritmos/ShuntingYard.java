@@ -69,6 +69,7 @@ public class ShuntingYard {
 		operadoresConcatDepois.add('*');
 		operadoresConcatDepois.add(')');
 		operadoresConcatDepois.add('?');
+		operadoresConcatDepois.add('+');
 
 		LinkedList<Simbolo> regexInfixConcatenacao =  new LinkedList<Simbolo>();
 		boolean ultimoTokenLetra = false;

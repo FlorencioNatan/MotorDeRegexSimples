@@ -1,5 +1,6 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
@@ -63,13 +64,13 @@ public class Automato {
 		return grafo;
 	}
 
-	public void adicionarTransicao(int estadoDeOrigem, int estadoDeDestino, Simbolo caractere) {
+	public void adicionarTransicao(int estadoDeOrigem, int estadoDeDestino, Simbolo simbolo) {
 		atualizarMaiorEMenorEstado(estadoDeOrigem);
 		atualizarMaiorEMenorEstado(estadoDeDestino);
 
 		if (!this.containsEstado(estadoDeOrigem)) {
 			Transicoes transicoes = new Transicoes();
-			transicoes.addTransicao(caractere, estadoDeDestino);
+			transicoes.addTransicao(simbolo, estadoDeDestino);
 			Estado novoEstado = new Estado(estadoDeOrigem);
 			novoEstado.setTransicoes(transicoes);
 			this.cauda.setProximoEstado(novoEstado);
@@ -77,7 +78,7 @@ public class Automato {
 			return;
 		}
 
-		this.findEstado(estadoDeOrigem).getTransicoes().addTransicao(caractere, estadoDeDestino);
+		this.findEstado(estadoDeOrigem).getTransicoes().addTransicao(simbolo, estadoDeDestino);
 	}
 
 	public void adicionarTransicao(int estadoDeOrigem, Transicao transicao) {
@@ -233,6 +234,29 @@ public class Automato {
 		} while(estadoAtual != null);
 
 		return null;
+	}
+
+	public Automato duplicar(int estadoBase) {
+		Automato duplicado = new Automato(estadoBase + this.estadoInicial);
+
+		Estado estadoAtual = this.cabeca;
+		do {
+			int estadoDeOrigem = estadoBase + estadoAtual.getIdEstado();
+
+			Transicoes transicoes = estadoAtual.getTransicoes();
+			for (Transicao transicao : transicoes.getListaTransicoes()) {
+				int estadoDeDestino = estadoBase + transicao.getEstadoDestino();
+				duplicado.adicionarTransicao(estadoDeOrigem, estadoDeDestino, transicao.getSimbolo());
+			}
+
+			estadoAtual = estadoAtual.getProximoEstado();
+		} while(estadoAtual != null);
+
+		for (int estadoFinal : this.estadosFinais) {
+			duplicado.adicionarEstadosFinais(estadoBase + estadoFinal);
+		}
+
+		return duplicado;
 	}
 
 }

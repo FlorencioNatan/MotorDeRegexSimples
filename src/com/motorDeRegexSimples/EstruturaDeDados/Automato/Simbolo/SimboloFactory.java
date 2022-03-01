@@ -11,6 +11,7 @@ import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Abre
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.EstrelaDeKleene;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.FechaParenteses;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.MaisDeKleene;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Opcao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
@@ -93,6 +94,10 @@ public class SimboloFactory {
 
 		if (simbolo == '*') {
 			return new EstrelaDeKleene();
+		}
+
+		if (simbolo == '+') {
+			return new MaisDeKleene();
 		}
 
 		if (simbolo == '?') {
