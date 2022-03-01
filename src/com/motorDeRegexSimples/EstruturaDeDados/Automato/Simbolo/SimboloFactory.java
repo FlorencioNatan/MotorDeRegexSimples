@@ -2,6 +2,7 @@ package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.Digitos;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.Palavra;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.QualquerCaractereExcetoQuebraDeLinha;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.AbreParenteses;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
@@ -35,6 +36,10 @@ public class SimboloFactory {
 
 		if (simbolo == 'd') {
 			return new Digitos();
+		}
+
+		if (simbolo == 'w') {
+			return new Palavra();
 		}
 
 		return new Caractere(simbolo);
