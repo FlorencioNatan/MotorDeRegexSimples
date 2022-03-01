@@ -1,6 +1,7 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.Digitos;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.EspacoHorizontal;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.Palavra;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.QualquerCaractereExcetoQuebraDeLinha;
@@ -40,6 +41,10 @@ public class SimboloFactory {
 
 		if (simbolo == 'w') {
 			return new Palavra();
+		}
+
+		if (simbolo == 'h') {
+			return new EspacoHorizontal();
 		}
 
 		return new Caractere(simbolo);
