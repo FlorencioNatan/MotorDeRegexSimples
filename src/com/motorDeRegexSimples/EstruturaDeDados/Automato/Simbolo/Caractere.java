@@ -2,7 +2,7 @@ package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 
-public class Caractere implements Simbolo {
+public class Caractere extends AbstractSimboloComAutomatoReconhecedorSimples implements Simbolo {
 
 	private char valor = ' ';
 

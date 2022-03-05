@@ -1,8 +1,9 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores;
 
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.AbstractSimboloComAutomatoReconhecedorSimples;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 
-public class FechaParenteses implements Simbolo {
+public class FechaParenteses extends AbstractSimboloComAutomatoReconhecedorSimples implements Simbolo {
 
 	@Override
 	public String getValor() {

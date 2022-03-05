@@ -1,5 +1,9 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo;
 
+import java.util.Stack;
+
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
+
 public interface Simbolo {
 
 	public String getValor();
@@ -7,5 +11,10 @@ public interface Simbolo {
 	public boolean equals(Object obj);
 
 	public boolean isEquivalenteAoChar(char valor);
+
+	/**
+	 * !!Atenção esse método altera a pilhaDeAutomatos!!
+	 */
+	public Automato getAutomatoReconhecedor(int contadorDeEstados, Stack<Automato> pilhaDeAutomatos);
 
 }

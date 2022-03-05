@@ -2,10 +2,11 @@ package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspe
 
 import java.util.HashSet;
 
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.AbstractSimboloComAutomatoReconhecedorSimples;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 
-public class EspacoHorizontal implements Simbolo {
+public class EspacoHorizontal extends AbstractSimboloComAutomatoReconhecedorSimples implements Simbolo {
 
 	private HashSet<Character> espacosHorizontais;
 	private String valor = "\\\\h";
