@@ -10,7 +10,6 @@ import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.SimboloFactory;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.AbreParenteses;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.FechaParenteses;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Opcao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
 public class ShuntingYard {
