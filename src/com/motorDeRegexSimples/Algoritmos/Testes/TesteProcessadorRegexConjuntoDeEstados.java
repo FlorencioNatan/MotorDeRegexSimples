@@ -26,6 +26,7 @@ class TesteProcessadorRegexConjuntoDeEstados {
 		assertEquals(expected, matches);
 	}
 
+	@Test
 	void testSimples2() {
 		ConstrucaoDeThompson thompson = new ConstrucaoDeThompson();
 		Automato automato = thompson.transformar("c*|s|d");
@@ -33,8 +34,10 @@ class TesteProcessadorRegexConjuntoDeEstados {
 		Vector<String> matches = processado.processar("cccccccdccasa");
 
 		Vector<String> expected = new Vector<>();
-		expected.add("Natan");
-		expected.add("Gama");
+		expected.add("ccccccc");
+		expected.add("d");
+		expected.add("cc");
+		expected.add("s");
 
 		assertEquals(expected, matches);
 	}
