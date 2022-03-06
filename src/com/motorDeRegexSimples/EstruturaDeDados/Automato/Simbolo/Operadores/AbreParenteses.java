@@ -1,9 +1,13 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores;
 
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.AbstractSimboloComAutomatoReconhecedorSimples;
+
+import java.util.LinkedList;
+import java.util.Stack;
+
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.AbstractSimboloPadrao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 
-public class AbreParenteses extends AbstractSimboloComAutomatoReconhecedorSimples implements Simbolo {
+public class AbreParenteses extends AbstractSimboloPadrao implements Simbolo, OperadorNaoPermiteConcatenacaoPosterior {
 
 	@Override
 	public String getValor() {
@@ -18,6 +22,11 @@ public class AbreParenteses extends AbstractSimboloComAutomatoReconhecedorSimple
 	@Override
 	public boolean isEquivalenteAoChar(char valor) {
 		return false;
+	}
+
+	@Override
+	public void processarShuntingYard(Stack<Simbolo> pilhaOperadores, LinkedList<Simbolo> regexPostfix) {
+		pilhaOperadores.add(this);
 	}
 
 }

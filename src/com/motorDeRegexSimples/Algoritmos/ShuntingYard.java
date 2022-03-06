@@ -1,16 +1,12 @@
 package com.motorDeRegexSimples.Algoritmos;
 
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.Stack;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.SimboloFactory;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.AbreParenteses;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.FechaParenteses;
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.OperadorNaoPermiteConcatenacaoAnterior;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.OperadorNaoPermiteConcatenacaoPosterior;
 
 public class ShuntingYard {
 
@@ -18,32 +14,9 @@ public class ShuntingYard {
 		LinkedList<Simbolo> regexPostfix = new LinkedList<Simbolo>();
 		Stack<Simbolo> pilhaOperadores = new Stack<Simbolo>();
 		LinkedList<Simbolo> regexInfixConcatenacao = adicionarConcatenacaoImplicita(regexInfix);
-		SimboloFactory factory = new SimboloFactory();
 
 		for (Simbolo tokenAtual : regexInfixConcatenacao) {
-			if (tokenAtual instanceof FechaParenteses) {
-				Simbolo operador = pilhaOperadores.pop();
-				while (!pilhaOperadores.empty() && !(operador instanceof AbreParenteses)) {
-					regexPostfix.add(operador);
-					operador = pilhaOperadores.pop();
-				}
-			} else if (tokenAtual instanceof AbreParenteses) {
-				pilhaOperadores.add(factory.getSimbolo('('));
-			} else if (tokenAtual instanceof Concatenacao) {
-				pilhaOperadores.add(factory.getSimbolo('∘'));
-			} else if (tokenAtual instanceof Uniao) {
-				if (!pilhaOperadores.empty()) {
-					Simbolo ultimoOperador = pilhaOperadores.pop();
-					if (ultimoOperador instanceof Concatenacao) {
-						regexPostfix.add(ultimoOperador);
-					} else {
-						pilhaOperadores.add(ultimoOperador);
-					}
-				}
-				pilhaOperadores.add(factory.getSimbolo('|'));
-			} else {
-				regexPostfix.add(tokenAtual);
-			}
+			tokenAtual.processarShuntingYard(pilhaOperadores, regexPostfix);
 		}
 
 		while (!pilhaOperadores.empty()) {
@@ -55,41 +28,31 @@ public class ShuntingYard {
 
 	private LinkedList<Simbolo> adicionarConcatenacaoImplicita(String regexInfix) {
 		SimboloFactory factory = new SimboloFactory();
-		Set<Character> operadoresConcatAntes;
-		operadoresConcatAntes = new HashSet<Character>();
-		operadoresConcatAntes.add('|');
-		operadoresConcatAntes.add('∘');
-		operadoresConcatAntes.add('(');
-
-		Set<Character> operadoresConcatDepois;
-		operadoresConcatDepois = new HashSet<Character>();
-		operadoresConcatDepois.add('|');
-		operadoresConcatDepois.add('∘');
-		operadoresConcatDepois.add('*');
-		operadoresConcatDepois.add(')');
-		operadoresConcatDepois.add('?');
-		operadoresConcatDepois.add('+');
-
 		LinkedList<Simbolo> regexInfixConcatenacao =  new LinkedList<Simbolo>();
-		boolean ultimoTokenLetra = false;
+		boolean permiteConcatenacaoNaPosicaoAtual = false;
+
 		for (int i = 0; i < regexInfix.length(); i++) {
 			char tokenAtual = regexInfix.charAt(i);
+			Simbolo simboloAtual = factory.getSimbolo(tokenAtual);
 
-			if (ultimoTokenLetra && !operadoresConcatDepois.contains(tokenAtual)) {
+			if (permiteConcatenacaoNaPosicaoAtual && !(simboloAtual instanceof OperadorNaoPermiteConcatenacaoAnterior)) {
 				regexInfixConcatenacao.add(factory.getSimbolo('∘'));
 			}
+
 			if (tokenAtual == '\\') {
 				factory.setEscape();
 				tokenAtual = regexInfix.charAt(++i);
+				simboloAtual = factory.getSimbolo(tokenAtual);
 			}
-			regexInfixConcatenacao.add(factory.getSimbolo(tokenAtual));
+			regexInfixConcatenacao.add(simboloAtual);
 
-			if (!operadoresConcatAntes.contains(tokenAtual)) {
-				ultimoTokenLetra = true;
+			if (!(simboloAtual instanceof OperadorNaoPermiteConcatenacaoPosterior)) {
+				permiteConcatenacaoNaPosicaoAtual = true;
 			} else {
-				ultimoTokenLetra = false;
+				permiteConcatenacaoNaPosicaoAtual = false;
 			}
 		}
+
 		return regexInfixConcatenacao;
 	}
 

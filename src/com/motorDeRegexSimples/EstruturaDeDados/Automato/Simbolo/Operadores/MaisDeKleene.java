@@ -3,9 +3,10 @@ package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores;
 import java.util.Stack;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.AbstractSimboloPadrao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 
-public class MaisDeKleene implements Simbolo {
+public class MaisDeKleene extends AbstractSimboloPadrao implements Simbolo, OperadorNaoPermiteConcatenacaoAnterior {
 
 	@Override
 	public String getValor() {

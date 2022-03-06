@@ -1,11 +1,13 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores;
 
+import java.util.LinkedList;
 import java.util.Stack;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.AbstractSimboloPadrao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 
-public class Concatenacao implements Simbolo {
+public class Concatenacao extends AbstractSimboloPadrao implements Simbolo, OperadorNaoPermiteConcatenacaoAnterior, OperadorNaoPermiteConcatenacaoPosterior {
 
 	@Override
 	public String getValor() {
@@ -28,6 +30,11 @@ public class Concatenacao implements Simbolo {
 		Automato primeiroOperando = pilhaDeAutomatos.pop();
 
 		return primeiroOperando.concatenarCom(segundoOperando);
+	}
+
+	@Override
+	public void processarShuntingYard(Stack<Simbolo> pilhaOperadores, LinkedList<Simbolo> regexPostfix) {
+		pilhaOperadores.add(this);
 	}
 
 }

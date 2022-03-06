@@ -1,10 +1,10 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais;
 
-import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.AbstractSimboloComAutomatoReconhecedorSimples;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.AbstractSimboloPadrao;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Caractere;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
 
-public class Digitos extends AbstractSimboloComAutomatoReconhecedorSimples implements Simbolo {
+public class Digitos extends AbstractSimboloPadrao implements Simbolo {
 
 	private String valor = "\\\\d";
 

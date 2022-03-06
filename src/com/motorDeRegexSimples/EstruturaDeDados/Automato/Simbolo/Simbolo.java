@@ -1,5 +1,6 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo;
 
+import java.util.LinkedList;
 import java.util.Stack;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Automato;
@@ -16,5 +17,7 @@ public interface Simbolo {
 	 * !!Atenção esse método altera a pilhaDeAutomatos!!
 	 */
 	public Automato getAutomatoReconhecedor(int contadorDeEstados, Stack<Automato> pilhaDeAutomatos);
+
+	public void processarShuntingYard(Stack<Simbolo> pilhaOperadores, LinkedList<Simbolo> regexPostfix);
 
 }

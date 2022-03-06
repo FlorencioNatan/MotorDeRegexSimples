@@ -1,6 +1,6 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo;
 
-public class ComplementoDoSimbolo extends AbstractSimboloComAutomatoReconhecedorSimples implements Simbolo {
+public class ComplementoDoSimbolo extends AbstractSimboloPadrao implements Simbolo {
 
 	private Simbolo simbolo;
 
