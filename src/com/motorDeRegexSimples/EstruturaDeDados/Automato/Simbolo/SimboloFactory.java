@@ -8,21 +8,28 @@ import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspec
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.ExpressaoVazia;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.Palavra;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.CaracteresEspeciais.QualquerCaractereExcetoQuebraDeLinha;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.AbreChave;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.AbreParenteses;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Concatenacao;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.DigitoQuantificador;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.EstrelaDeKleene;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.FechaChave;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.FechaParenteses;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.MaisDeKleene;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Opcao;
+import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.SeparadorQuantificador;
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Operadores.Uniao;
 
 public class SimboloFactory {
 
 	private boolean escape = false;
+	private boolean quantificado = false;
 
 	public Simbolo getSimbolo(char simbolo) {
 		if (this.escape) {
 			return this.getSimboloEscapado(simbolo);
+		} else if (quantificado) {
+			return this.getSimboloQuantificador(simbolo);
 		} else {
 			return this.getSimboloPadrao(simbolo);
 		}
@@ -121,7 +128,25 @@ public class SimboloFactory {
 			return new QualquerCaractereExcetoQuebraDeLinha();
 		}
 
+		if (simbolo == '{') {
+			this.quantificado = true;
+			return new AbreChave();
+		}
+
 		return new Caractere(simbolo);
+	}
+
+	private Simbolo getSimboloQuantificador(char simbolo) {
+		if (simbolo == ',') {
+			return new SeparadorQuantificador();
+		}
+
+		if (simbolo == '}') {
+			this.quantificado = false;
+			return new FechaChave();
+		}
+
+		return new DigitoQuantificador(simbolo);
 	}
 
 }
