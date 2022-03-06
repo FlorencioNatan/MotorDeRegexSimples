@@ -119,4 +119,21 @@ class TesteProcessadorRegexConjuntoDeEstados {
 		assertEquals(expected, matches);
 	}
 
+	@Test
+	void testQuantificadores() {
+		ConstrucaoDeThompson thompson = new ConstrucaoDeThompson();
+		Automato automato = thompson.transformar("a{2,5}");
+		ProcessadorRegexConjuntoDeEstados processado = new ProcessadorRegexConjuntoDeEstados(automato);
+		Vector<String> matches = processado.processar("a aa aaa aaaa aaaaa aaaaaa");
+
+		Vector<String> expected = new Vector<>();
+		expected.add("aa");
+		expected.add("aaa");
+		expected.add("aaaa");
+		expected.add("aaaaa");
+		expected.add("aaaaa");
+
+		assertEquals(expected, matches);
+	}
+
 }
