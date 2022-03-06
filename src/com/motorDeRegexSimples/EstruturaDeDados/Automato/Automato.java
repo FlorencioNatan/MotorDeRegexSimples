@@ -1,5 +1,6 @@
 package com.motorDeRegexSimples.EstruturaDeDados.Automato;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import com.motorDeRegexSimples.EstruturaDeDados.Automato.Simbolo.Simbolo;
@@ -236,15 +237,26 @@ public class Automato {
 	}
 
 	public Automato duplicar(int estadoBase) {
-		Automato duplicado = new Automato(estadoBase + this.estadoInicial);
+		HashMap<Integer, Integer> mapaDeEstados = new HashMap<Integer, Integer>();
 
 		Estado estadoAtual = this.cabeca;
 		do {
-			int estadoDeOrigem = estadoBase + estadoAtual.getIdEstado();
+			mapaDeEstados.put(estadoAtual.getIdEstado(), estadoBase++);
+			estadoAtual = estadoAtual.getProximoEstado();
+		} while(estadoAtual != null);
+
+		Automato duplicado = new Automato(mapaDeEstados.get(this.estadoInicial));
+		estadoAtual = this.cabeca;
+		do {
+			int estadoDeOrigem = mapaDeEstados.get(estadoAtual.getIdEstado());
 
 			Transicoes transicoes = estadoAtual.getTransicoes();
 			for (Transicao transicao : transicoes.getListaTransicoes()) {
-				int estadoDeDestino = estadoBase + transicao.getEstadoDestino();
+				Integer estadoDeDestino = mapaDeEstados.get(transicao.getEstadoDestino());
+				if (estadoDeDestino == null) {
+					estadoDeDestino = estadoBase++;
+					mapaDeEstados.put(transicao.getEstadoDestino(), estadoDeDestino);
+				}
 				duplicado.adicionarTransicao(estadoDeOrigem, estadoDeDestino, transicao.getSimbolo());
 			}
 
@@ -252,7 +264,7 @@ public class Automato {
 		} while(estadoAtual != null);
 
 		for (int estadoFinal : this.estadosFinais) {
-			duplicado.adicionarEstadosFinais(estadoBase + estadoFinal);
+			duplicado.adicionarEstadosFinais(mapaDeEstados.get(estadoFinal));
 		}
 
 		return duplicado;
