@@ -48,6 +48,8 @@ public class Quantificador extends AbstractSimboloPadrao implements Simbolo {
 			} else {
 				resultado.unirCom(concatenacao);
 				contadorDeEstados = resultado.getMaiorEstado() + 1;
+				operando = operando.duplicar(contadorDeEstados);
+				contadorDeEstados = operando.getMaiorEstado() + 1;
 			}
 		}
 		return resultado;
