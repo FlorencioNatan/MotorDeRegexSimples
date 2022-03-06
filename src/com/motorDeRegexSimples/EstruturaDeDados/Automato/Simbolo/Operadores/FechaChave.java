@@ -29,7 +29,7 @@ public class FechaChave extends AbstractSimboloPadrao implements Simbolo, Operad
 		Quantificador quantificador = new Quantificador();
 
 		int valorMaximo = this.getValorQuantificador(pilhaOperadores, operador);
-		operador = pilhaOperadores.pop();
+		operador = pilhaOperadores.empty() ? null : pilhaOperadores.pop();
 		if (operador instanceof SeparadorQuantificador) {
 			operador = pilhaOperadores.pop();
 			int valorMinimo = this.getValorQuantificador(pilhaOperadores, operador);
