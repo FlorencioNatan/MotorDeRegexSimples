@@ -104,51 +104,44 @@ public class ProcessadorRegexConjuntoDeEstados {
 	}
 
 	private HashSet<Integer> getConjuntoEstados(int estado, Simbolo simbolo) {
+		HashSet<Integer> estadosMarcados = new HashSet<>();
+		return this.getConjuntoEstadosRecorrencia(estado, simbolo, estadosMarcados);
+	}
+
+	private HashSet<Integer> getConjuntoEstadosRecorrencia(int estado, Simbolo simbolo, HashSet<Integer> estadosMarcados) {
 		HashSet<Integer> proximosEstados = new HashSet<>();
+		boolean adicionarEstadoAtual = automato.isEstadoFinal(estado);
+
+		estadosMarcados.add(estado);
 
 		Transicoes transicoes = automato.getTransicoesDoEstado(estado);
 		if (transicoes == null) {
+			if (adicionarEstadoAtual) {
+				proximosEstados.add(estado);
+			}
 			return proximosEstados;
 		}
 
 		for (Transicao transicao : transicoes.getListaTransicoes()) {
-			if (transicao.getSimbolo() instanceof ExpressaoVazia) {
-				Stack<Integer> possiveisEstados = new Stack<>();
-				possiveisEstados.add(transicao.getEstadoDestino());
-				while (!possiveisEstados.empty()) {
-					int possivelEstadoDestino = possiveisEstados.pop();
-					Transicoes possiveisTransicoes = automato.getTransicoesDoEstado(possivelEstadoDestino);
-
-					if (automato.isEstadoFinal(possivelEstadoDestino)) {
-						proximosEstados.add(possivelEstadoDestino);
-					}
-
-					if (possiveisTransicoes == null) {
-						continue;
-					}
-					for (Transicao possivelTransicao : possiveisTransicoes.getListaTransicoes()) {
-						if (possivelTransicao.getSimbolo() instanceof ExpressaoVazia) {
-							possiveisEstados.add(possivelTransicao.getEstadoDestino());
-						} else if (!(simbolo instanceof ExpressaoVazia) && possivelTransicao.getSimbolo().equals(simbolo)) {
-							proximosEstados.add(possivelTransicao.getEstadoDestino());
-						} else {
-							proximosEstados.add(possivelEstadoDestino);
-						}
-					}
-				}
-			} else if (!(simbolo instanceof ExpressaoVazia) && simbolo.equals(transicao.getSimbolo())) {
-				int estadoDestino = transicao.getEstadoDestino();
-				SimboloFactory factory = new SimboloFactory();
-				HashSet<Integer> estadosParaAdicionar = this.getConjuntoEstados(estadoDestino, factory.getSimbolo());
-				adicionaEstadoAoConjutoDeEstados(estadoDestino, proximosEstados);
-				for (Integer i: estadosParaAdicionar) {
-					adicionaEstadoAoConjutoDeEstados(i, proximosEstados);
-				}
-			} else if (!(simbolo instanceof ExpressaoVazia) && !simbolo.equals(transicao.getSimbolo())) {
-				proximosEstados.add(estado);
-			} else {
-				proximosEstados.add(estado);
+			if (simbolo instanceof ExpressaoVazia) {
+				if(!(transicao.getSimbolo() instanceof ExpressaoVazia))
+					adicionarEstadoAtual = true;
 			}
+
+			if((transicao.getSimbolo() instanceof ExpressaoVazia)) {
+				HashSet<Integer> estadosRetorno = this.getConjuntoEstadosRecorrencia(transicao.getEstadoDestino(), simbolo, estadosMarcados);
+				proximosEstados.addAll(estadosRetorno);
+			} else if(!(simbolo instanceof ExpressaoVazia)) {
+				if (simbolo.equals(transicao.getSimbolo())) {
+					SimboloFactory factory = new SimboloFactory();
+					HashSet<Integer> estadosRetorno = this.getConjuntoEstadosRecorrencia(transicao.getEstadoDestino(), factory.getSimbolo(), estadosMarcados);
+					proximosEstados.addAll(estadosRetorno);
+				}
+			}
+		}
+
+		if (adicionarEstadoAtual) {
+			proximosEstados.add(estado);
 		}
 
 		return proximosEstados;
